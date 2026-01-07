@@ -5,8 +5,12 @@ const Credits = ({ onBack }) => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    // We use the direct API URL. Casing should not matter but we use the exact one.
     fetch('https://api.github.com/repos/ramkrishna-js/Typing-Speed-Test/contributors')
-      .then(res => res.json())
+      .then(res => {
+        if (!res.ok) throw new Error('Failed to fetch');
+        return res.json();
+      })
       .then(data => {
         if (Array.isArray(data)) {
           setContributors(data);
@@ -14,66 +18,85 @@ const Credits = ({ onBack }) => {
         setLoading(false);
       })
       .catch(err => {
-        console.error("Failed to fetch contributors", err);
+        console.error("Contributors fetch error:", err);
         setLoading(false);
       });
   }, []);
 
-  const handleKeyDown = (e) => {
-    if (e.key === 'Escape') {
-      onBack();
-    }
-  };
-
   return (
     <div 
-      className="flex flex-col items-center justify-center min-h-screen text-center space-y-8 animate-fade-in p-8"
-      onKeyDown={handleKeyDown}
+      className="flex flex-col items-center justify-center min-h-screen p-6 sm:p-12 space-y-10 outline-none"
+      onKeyDown={(e) => e.key === 'Escape' && onBack()}
       tabIndex={0}
       autoFocus
     >
-      <h1 className="text-4xl font-bold text-[var(--color-active-text)]">Credits</h1>
-      
-      <div className="bg-[var(--color-main-bg)] border border-[var(--color-main-text)] rounded-xl p-8 max-w-2xl w-full shadow-2xl">
-        {/* Main Developer */}
-        <div className="mb-10">
-          <h2 className="text-xl text-[var(--color-caret)] font-bold mb-4 uppercase tracking-widest">Main Developer</h2>
-          <div className="flex items-center justify-center space-x-4">
-             <img src="https://github.com/ramkrishna-js.png" alt="ramkrishna-js" className="w-16 h-16 rounded-full border-2 border-[var(--color-caret)]" />
-             <div className="text-left">
-                <div className="text-[var(--color-active-text)] text-2xl font-bold">ramkrishna-js</div>
-                <a href="https://github.com/ramkrishna-js" target="_blank" className="text-[var(--color-main-text)] hover:text-[var(--color-active-text)] text-sm underline">View Profile</a>
-             </div>
+      <div className="text-center space-y-2">
+        <h1 className="text-4xl md:text-5xl font-bold text-[var(--color-active-text)]">Project Credits</h1>
+        <p className="text-[var(--color-main-text)]">The people behind this project.</p>
+      </div>
+
+      <div className="w-full max-w-3xl bg-[var(--color-main-bg)] border border-[var(--color-main-text)] rounded-2xl p-8 shadow-2xl space-y-12">
+        
+        {/* Core Team */}
+        <div className="space-y-6">
+          <h2 className="text-sm uppercase tracking-[0.3em] text-[var(--color-main-text)] font-black text-center border-b border-[var(--color-main-text)] pb-2 opacity-50">
+            Core Team
+          </h2>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+            {/* Main Dev */}
+            <div className="flex items-center space-x-4 p-4 rounded-xl bg-white/5">
+              <img src="https://github.com/ramkrishna-js.png" alt="ramkrishna-js" className="w-16 h-16 rounded-full border-2 border-[var(--color-caret)]" />
+              <div>
+                <div className="text-[var(--color-active-text)] font-bold text-xl">ramkrishna-js</div>
+                <div className="text-[var(--color-main-text)] text-sm italic">Lead Developer</div>
+              </div>
+            </div>
+
+            {/* Co-Author / Collaborator */}
+            <div className="flex items-center space-x-4 p-4 rounded-xl bg-white/5">
+              <div className="w-16 h-16 rounded-full bg-gradient-to-br from-yellow-400 to-red-500 flex items-center justify-center text-white text-2xl font-bold border-2 border-[var(--color-caret)]">
+                U
+              </div>
+              <div>
+                <div className="text-[var(--color-active-text)] font-bold text-xl">ugadim51</div>
+                <div className="text-[var(--color-main-text)] text-sm italic">Co-Author</div>
+              </div>
+            </div>
           </div>
         </div>
 
-        {/* Contributors */}
-        <div>
-          <h2 className="text-xl text-[var(--color-main-text)] font-bold mb-6 uppercase tracking-widest">Contributors</h2>
+        {/* GitHub Contributors */}
+        <div className="space-y-6">
+          <h2 className="text-sm uppercase tracking-[0.3em] text-[var(--color-main-text)] font-black text-center border-b border-[var(--color-main-text)] pb-2 opacity-50">
+            Contributors
+          </h2>
           
           {loading ? (
-            <div className="text-[var(--color-main-text)] animate-pulse">Loading...</div>
+            <div className="flex justify-center py-10">
+              <div className="w-8 h-8 border-4 border-[var(--color-caret)] border-t-transparent rounded-full animate-spin"></div>
+            </div>
           ) : (
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              {contributors.filter(c => c.login !== 'ramkrishna-js').length === 0 ? (
-                 <div className="col-span-full text-[var(--color-main-text)] italic opacity-50">
-                    No other contributors yet. Be the first!
-                 </div>
-              ) : (
-                contributors
-                  .filter(c => c.login !== 'ramkrishna-js')
-                  .map(contributor => (
-                    <a 
-                      key={contributor.id} 
-                      href={contributor.html_url} 
-                      target="_blank" 
-                      rel="noreferrer"
-                      className="flex items-center space-x-3 p-3 rounded-lg hover:bg-white/5 transition-colors"
-                    >
-                      <img src={contributor.avatar_url} alt={contributor.login} className="w-10 h-10 rounded-full" />
-                      <span className="text-[var(--color-active-text)] font-mono">{contributor.login}</span>
-                    </a>
-                  ))
+            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
+              {contributors
+                .filter(c => c.login !== 'ramkrishna-js')
+                .map(contributor => (
+                  <a 
+                    key={contributor.id} 
+                    href={contributor.html_url} 
+                    target="_blank" 
+                    rel="noreferrer"
+                    className="flex flex-col items-center p-4 rounded-xl hover:bg-white/5 transition-all group"
+                  >
+                    <img src={contributor.avatar_url} alt={contributor.login} className="w-12 h-12 rounded-full mb-3 group-hover:scale-110 transition-transform" />
+                    <span className="text-[var(--color-main-text)] group-hover:text-[var(--color-active-text)] text-sm truncate w-full text-center">
+                      {contributor.login}
+                    </span>
+                  </a>
+                ))}
+              {contributors.filter(c => c.login !== 'ramkrishna-js').length === 0 && (
+                <div className="col-span-full text-center py-4 text-[var(--color-main-text)] italic text-sm">
+                  Waiting for more amazing people to contribute...
+                </div>
               )}
             </div>
           )}
@@ -82,9 +105,10 @@ const Credits = ({ onBack }) => {
 
       <button
         onClick={onBack}
-        className="text-[var(--color-main-text)] hover:text-[var(--color-active-text)] transition-colors underline"
+        className="px-8 py-3 text-[var(--color-main-text)] hover:text-[var(--color-active-text)] text-lg transition-colors flex items-center space-x-2"
       >
-        Back to Home (Esc)
+        <span>← Back to Home</span>
+        <kbd className="hidden sm:inline bg-gray-700 px-2 py-1 rounded text-xs ml-2">Esc</kbd>
       </button>
     </div>
   );

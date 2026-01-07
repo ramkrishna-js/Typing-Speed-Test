@@ -74,8 +74,24 @@ Contributions are welcome! Feel free to open an issue or submit a pull request i
 
 ## 📄 License
 
-This project is open source and available under the [MIT License](LICENSE).
+
+
+This project is licensed under the [MIT License](LICENSE).
+
+
+
+## 🤝 Acknowledgments
+
+
+
+- **Main Developer**: [ramkrishna-js](https://github.com/ramkrishna-js)
+
+- **Co-Author**: [ugadim51](mailto:ugadim51@gmail.com)
+
+
 
 ---
 
-Built with ❤️ by [ramkrishna-js](https://github.com/ramkrishna-js)
+
+
+Built with ❤️ by [ramkrishna-js](https://github.com/ramkrishna-js) and contributors.
