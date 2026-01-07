@@ -1,30 +1,20 @@
-@import "tailwindcss";
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
-@theme {
-  --font-mono: 'Roboto Mono', monospace;
+@layer base {
+  body {
+    @apply bg-main-bg text-main-text font-mono overflow-hidden m-0;
+  }
+}
+
+/* Custom CSS Variables for fallback */
+:root {
   --color-main-bg: #323437;
   --color-main-text: #646669;
   --color-active-text: #d1d0c5;
   --color-error: #ca4754;
   --color-caret: #e2b714;
-}
-
-body {
-  background-color: var(--color-main-bg);
-  font-family: var(--font-mono);
-  color: var(--color-main-text);
-  margin: 0;
-  overflow: hidden;
-}
-
-/* Custom Animations */
-@keyframes fadeIn {
-  from { opacity: 0; transform: translateY(10px); }
-  to { opacity: 1; transform: translateY(0); }
-}
-
-.animate-fade-in {
-  animation: fadeIn 0.5s ease-out forwards;
 }
 
 /* Smooth Caret */
