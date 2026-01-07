@@ -1,19 +1,16 @@
-import { useNavigate } from 'react-router-dom';
 import { useEffect } from 'react';
 
-const Home = () => {
-  const navigate = useNavigate();
-
+const Home = ({ onStart, onCredits }) => {
   // Handle global Enter key to start test
   useEffect(() => {
     const handleKeyDown = (e) => {
       if (e.key === 'Enter') {
-        navigate('/test');
+        onStart();
       }
     };
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [navigate]);
+  }, [onStart]);
 
   return (
     <div className="flex flex-col items-center justify-center min-h-screen text-center p-6 space-y-10 relative">
@@ -28,14 +25,14 @@ const Home = () => {
 
       <div className="flex flex-col sm:flex-row gap-6 items-center relative z-10">
         <button
-          onClick={() => navigate('/test')}
+          onClick={onStart}
           className="px-10 py-5 bg-[var(--color-caret)] text-[var(--color-main-bg)] text-2xl font-black rounded-xl hover:scale-105 active:scale-95 transition-all duration-200 cursor-pointer shadow-lg"
         >
           START TYPING
         </button>
 
         <button
-          onClick={() => navigate('/credits')}
+          onClick={onCredits}
           className="px-10 py-5 bg-transparent border-2 border-[var(--color-main-text)] text-[var(--color-main-text)] text-2xl font-bold rounded-xl hover:border-[var(--color-active-text)] hover:text-[var(--color-active-text)] transition-all duration-200 cursor-pointer"
         >
           CREDITS

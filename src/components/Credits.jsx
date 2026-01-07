@@ -1,8 +1,6 @@
 import { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
 
-const Credits = () => {
-  const navigate = useNavigate();
+const Credits = ({ onBack }) => {
   const [contributors, setContributors] = useState([]);
   const [loading, setLoading] = useState(true);
 
@@ -27,7 +25,7 @@ const Credits = () => {
   return (
     <div 
       className="flex flex-col items-center justify-center min-h-screen p-6 sm:p-12 space-y-10 outline-none overflow-y-auto no-scrollbar"
-      onKeyDown={(e) => e.key === 'Escape' && navigate('/')}
+      onKeyDown={(e) => e.key === 'Escape' && onBack()}
       tabIndex={0}
       autoFocus
     >
@@ -103,7 +101,7 @@ const Credits = () => {
       </div>
 
       <button
-        onClick={() => navigate('/')}
+        onClick={onBack}
         className="px-8 py-3 text-[var(--color-main-text)] hover:text-[var(--color-active-text)] text-lg transition-colors flex items-center space-x-2"
       >
         <span>← Back to Home</span>
