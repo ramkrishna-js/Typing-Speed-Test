@@ -7,6 +7,10 @@ export default defineConfig({
   resolve: {
     dedupe: ['react', 'react-dom'],
   },
+  build: {
+    minify: false,
+    sourcemap: true,
+  },
   plugins: [
     react(),
   ],
