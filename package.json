@@ -3,7 +3,7 @@
   "private": true,
   "version": "0.0.0",
   "type": "module",
-  "homepage": "https://ramkrishna-js.github.io/typing-speed-test",
+  "homepage": "https://ramkrishna-js.github.io/Typing-Speed-Test",
   "scripts": {
     "dev": "vite",
     "build": "vite build",

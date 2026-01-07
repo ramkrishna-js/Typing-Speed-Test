@@ -1,16 +1,81 @@
-# React + Vite
+# ⚡ Typing Speed Test
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A modern, minimalist typing speed test application built with **React** and **Tailwind CSS**. Measure your Words Per Minute (WPM) and accuracy in a clean, distraction-free environment.
 
-Currently, two official plugins are available:
+🔗 **[Live Demo](https://ramkrishna-js.github.io/Typing-Speed-Test/)**
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+![Typing Speed Test Preview](https://via.placeholder.com/800x450/1e293b/fbbf24?text=Typing+Speed+Test+Preview)
+*(Note: Replace this placeholder with a real screenshot of your app!)*
 
-## React Compiler
+## ✨ Features
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+- **Real-time Metrics**: Instant feedback on WPM, accuracy %, and time remaining.
+- **Dynamic Highlighting**: Visual cues for correct (green) and incorrect (red) characters as you type.
+- **Responsive Design**: Looks great on desktops, tablets, and mobile devices.
+- **Dark Mode UI**: Easy on the eyes with a slate-gray and yellow color scheme.
+- **Restart Capability**: Quickly reset the test to try again.
 
-## Expanding the ESLint configuration
+## 🛠️ Tech Stack
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+- **[React](https://react.dev/)**: For building the interactive user interface.
+- **[Vite](https://vitejs.dev/)**: For lightning-fast development and building.
+- **[Tailwind CSS](https://tailwindcss.com/)**: For utility-first, modern styling (v4).
+- **[GitHub Pages](https://pages.github.com/)**: For seamless deployment.
+
+## 🚀 Getting Started
+
+Follow these steps to run the project locally on your machine.
+
+### Prerequisites
+
+- Node.js (v18 or higher)
+- npm (usually comes with Node.js)
+
+### Installation
+
+1.  **Clone the repository**
+    ```bash
+    git clone https://github.com/ramkrishna-js/Typing-Speed-Test.git
+    cd Typing-Speed-Test
+    ```
+
+2.  **Install dependencies**
+    ```bash
+    npm install
+    ```
+
+3.  **Start the development server**
+    ```bash
+    npm run dev
+    ```
+    Open [http://localhost:5173](http://localhost:5173) in your browser.
+
+## 📦 Building for Production
+
+To create a production-ready build:
+
+```bash
+npm run build
+```
+
+The output will be in the `dist` directory.
+
+## 🚢 Deployment
+
+This project is configured for deployment to GitHub Pages.
+
+```bash
+npm run deploy
+```
+
+## 🤝 Contributing
+
+Contributions are welcome! Feel free to open an issue or submit a pull request if you have ideas for improvements.
+
+## 📄 License
+
+This project is open source and available under the [MIT License](LICENSE).
+
+---
+
+Built with ❤️ by [ramkrishna-js](https://github.com/ramkrishna-js)
