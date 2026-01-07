@@ -7284,13 +7284,21 @@ const TypingTest = ({ onExit }) => {
     }
     return () => clearInterval(timerRef.current);
   }, [isActive, timer]);
-  reactExports.useEffect(() => {
+  reactExports.useLayoutEffect(() => {
     if (letterRefs.current[currIndex]) {
       const letter = letterRefs.current[currIndex];
       setCaretPosition({
         top: letter.offsetTop,
         left: letter.offsetLeft
       });
+      if (containerRef.current) {
+        const container = containerRef.current;
+        const caretBottom = letter.offsetTop + letter.offsetHeight;
+        const containerBottom = container.scrollTop + container.clientHeight;
+        if (caretBottom > containerBottom - 50) {
+          container.scrollTop = letter.offsetTop - 50;
+        }
+      }
     }
   }, [currIndex, words]);
   const generateWords = () => {
@@ -7386,6 +7394,7 @@ const TypingTest = ({ onExit }) => {
     resetTest();
   };
   if (words.length === 0) return /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "w-full h-full flex items-center justify-center text-[var(--color-main-text)]", children: "Loading..." });
+  const charList = reactExports.useMemo(() => flattenWords.split(""), [flattenWords]);
   return /* @__PURE__ */ jsxRuntimeExports.jsxs(
     "div",
     {
@@ -7442,7 +7451,7 @@ const TypingTest = ({ onExit }) => {
                       style: { top: caretPosition.top + 4, left: caretPosition.left }
                     }
                   ),
-                  flattenWords.split("").map((char, index) => {
+                  charList.map((char, index) => {
                     let statusClass = "text-[var(--color-main-text)]";
                     if (index < userInput.length) {
                       statusClass = userInput[index] === char ? "text-[var(--color-active-text)]" : "text-[var(--color-error)]";
@@ -7630,4 +7639,4 @@ console.log("Typing Speed Test v1.3.0 (Vite 5 Stable) loaded");
 createRoot(document.getElementById("root")).render(
   /* @__PURE__ */ jsxRuntimeExports.jsx(ErrorBoundary, { children: /* @__PURE__ */ jsxRuntimeExports.jsx(App, {}) })
 );
-//# sourceMappingURL=index-Dc1VW6YA.js.map
+//# sourceMappingURL=index-DyvhQN33.js.map
