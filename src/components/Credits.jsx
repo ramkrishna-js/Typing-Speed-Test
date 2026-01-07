@@ -55,10 +55,10 @@ const Credits = ({ onBack }) => {
             {/* Co-Author / Collaborator */}
             <div className="flex items-center space-x-4 p-4 rounded-xl bg-white/5">
               <div className="w-16 h-16 rounded-full bg-gradient-to-br from-yellow-400 to-red-500 flex items-center justify-center text-white text-2xl font-bold border-2 border-[var(--color-caret)]">
-                U
+                M
               </div>
               <div>
-                <div className="text-[var(--color-active-text)] font-bold text-xl">ugadim51</div>
+                <div className="text-[var(--color-active-text)] font-bold text-xl">manjunathh-xyz</div>
                 <div className="text-[var(--color-main-text)] text-sm italic">Co-Author</div>
               </div>
             </div>

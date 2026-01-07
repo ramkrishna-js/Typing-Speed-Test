@@ -10,12 +10,9 @@ const Home = ({ onStart, onCredits }) => {
         </p>
       </div>
 
-      <div className="flex flex-col sm:flex-row gap-6 items-center">
+      <div className="flex flex-col sm:flex-row gap-6 items-center relative z-10">
         <button
-          onClick={() => {
-            console.log("Start button clicked");
-            onStart();
-          }}
+          onClick={onStart}
           className="px-10 py-5 bg-[var(--color-caret)] text-[var(--color-main-bg)] text-2xl font-black rounded-xl hover:scale-105 active:scale-95 transition-all duration-200 cursor-pointer shadow-lg"
         >
           START TYPING

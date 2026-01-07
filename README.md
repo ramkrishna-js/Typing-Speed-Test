@@ -86,7 +86,9 @@ This project is licensed under the [MIT License](LICENSE).
 
 - **Main Developer**: [ramkrishna-js](https://github.com/ramkrishna-js)
 
-- **Co-Author**: [ugadim51](mailto:ugadim51@gmail.com)
+
+
+- **Co-Author**: [manjunathh-xyz](mailto:ugadim51@gmail.com)
 
 
 
