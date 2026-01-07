@@ -157,7 +157,7 @@ const TypingTest = ({ onExit }) => {
   };
 
   const calculateResults = () => {
-    const correctChars = userInput.split('').filter((char, i) => char === flattenWords()[i]).length;
+    const correctChars = userInput.split('').filter((char, i) => char === flattenWords[i]).length;
     const totalChars = userInput.length;
     const timeSpent = (testDuration - timer) / 60;
     
@@ -210,7 +210,7 @@ const TypingTest = ({ onExit }) => {
     setUserInput(val);
     setCurrIndex(val.length);
 
-    const currentString = flattenWords();
+    const currentString = flattenWords;
     let correct = 0;
     for (let i = 0; i < val.length; i++) {
         if (val[i] === currentString[i]) correct++;
@@ -294,7 +294,7 @@ const TypingTest = ({ onExit }) => {
                             ></div>
                         )}
 
-                        {flattenWords().split('').map((char, index) => {
+                        {flattenWords.split('').map((char, index) => {
                             let statusClass = "text-[var(--color-main-text)]";
                             if (index < userInput.length) {
                                 statusClass = userInput[index] === char ? "text-[var(--color-active-text)]" : "text-[var(--color-error)]";
