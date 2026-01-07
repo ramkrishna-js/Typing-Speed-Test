@@ -1,9 +1,10 @@
 import { useState, useEffect } from 'react';
 import TypingTest from './components/TypingTest';
 import Home from './components/Home';
+import Credits from './components/Credits';
 
 function App() {
-  const [view, setView] = useState('home'); // 'home' | 'test'
+  const [view, setView] = useState('home'); // 'home' | 'test' | 'credits'
 
   // Handle global Enter key to start test from home
   useEffect(() => {
@@ -17,9 +18,10 @@ function App() {
   }, [view]);
 
   return (
-    <div className="min-h-screen bg-[var(--color-main-bg)] text-[var(--color-main-text)] font-mono overflow-hidden">
-      {view === 'home' && <Home onStart={() => setView('test')} />}
+    <div className="min-h-screen bg-[var(--color-main-bg)] text-[var(--color-main-text)] font-mono overflow-y-auto no-scrollbar">
+      {view === 'home' && <Home onStart={() => setView('test')} onCredits={() => setView('credits')} />}
       {view === 'test' && <TypingTest onExit={() => setView('home')} />}
+      {view === 'credits' && <Credits onBack={() => setView('home')} />}
       
       {/* Global Footer (visible on Home, usually hidden or minimal on Test) */}
       {view === 'home' && (
