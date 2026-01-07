@@ -1,77 +1,92 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, useMemo } from 'react';
 
-const SAMPLE_TEXTS = [
-  "The quick brown fox jumps over the lazy dog. This classic pangram contains every letter of the English alphabet, making it perfect for typing practice. Speed and accuracy are both important when you are learning to type efficiently.",
-  "Programming is not just about writing code; it is about solving problems and creating solutions that make people's lives easier. Consistency and curiosity are key traits of a successful software developer.",
-  "The sun was setting behind the mountains, casting a golden glow over the valley. It was a peaceful evening, the kind that makes you stop and appreciate the simple beauty of nature.",
-  "Artificial intelligence is transforming the way we interact with technology. From voice assistants to self-driving cars, the possibilities seem endless, yet we must remain mindful of the ethical implications.",
-  "Success is not final, failure is not fatal: it is the courage to continue that counts. Winston Churchill's words remind us that persistence is often more important than immediate results."
+const COMMON_WORDS = [
+  "the", "be", "of", "and", "a", "to", "in", "he", "have", "it", "that", "for", "they", "i", "with", "as", "not", "on", "she", "at", "by", "this", "we", "you", "do", "but", "from", "or", "which", "one", "would", "all", "will", "there", "say", "who", "make", "when", "can", "more", "if", "no", "man", "out", "other", "so", "what", "time", "up", "go", "about", "than", "into", "could", "state", "only", "new", "year", "some", "take", "come", "these", "know", "see", "use", "get", "like", "then", "first", "any", "work", "now", "may", "such", "give", "over", "think", "most", "even", "find", "day", "also", "after", "way", "many", "must", "look", "before", "great", "back", "through", "long", "where", "much", "should", "well", "people", "down", "own", "just", "because", "good", "each", "those", "feel", "seem", "how", "high", "too", "place", "little", "world", "very", "still", "nation", "hand", "old", "life", "tell", "write", "become", "here", "show", "house", "both", "between", "need", "mean", "call", "develop", "under", "last", "right", "move", "thing", "general", "school", "never", "same", "another", "begin", "while", "number", "part", "turn", "real", "leave", "might", "want", "point", "form", "off", "child", "few", "small", "since", "against", "ask", "late", "home", "interest", "large", "person", "end", "open", "public", "follow", "during", "present", "without", "again", "hold", "govern", "around", "possible", "head", "consider", "word", "program", "problem", "however", "lead", "system", "set", "order", "eye", "plan", "run", "keep", "face", "fact", "group", "play", "stand", "increase", "early", "course", "change", "help", "line"
 ];
 
 function App() {
-  const [text, setText] = useState("");
+  const [words, setWords] = useState([]);
   const [userInput, setUserInput] = useState("");
+  const [currIndex, setCurrIndex] = useState(0); // Character index in the flattened string
   const [startTime, setStartTime] = useState(null);
-  const [endTime, setEndTime] = useState(null);
-  const [isFinished, setIsFinished] = useState(false);
   const [wpm, setWpm] = useState(0);
   const [accuracy, setAccuracy] = useState(100);
-  const [timer, setTimer] = useState(60);
+  const [timer, setTimer] = useState(30);
+  const [testDuration, setTestDuration] = useState(30);
   const [isActive, setIsActive] = useState(false);
+  const [isFinished, setIsFinished] = useState(false);
+  const [caretPosition, setCaretPosition] = useState({ top: 0, left: 0 });
+  const [isFocused, setIsFocused] = useState(true);
 
   const inputRef = useRef(null);
+  const containerRef = useRef(null);
+  const letterRefs = useRef({}); // Store refs to each letter span
   const timerRef = useRef(null);
 
+  // Initialize test
   useEffect(() => {
-    startNewTest();
+    resetTest();
+    // Global focus listener
+    const handleFocus = () => setIsFocused(true);
+    const handleBlur = () => setIsFocused(false);
+    window.addEventListener('focus', handleFocus);
+    window.addEventListener('blur', handleBlur);
+    return () => {
+      window.removeEventListener('focus', handleFocus);
+      window.removeEventListener('blur', handleBlur);
+    };
   }, []);
 
+  // Timer logic
   useEffect(() => {
     if (isActive && timer > 0) {
       timerRef.current = setInterval(() => {
-        setTimer((prev) => prev - 1);
+        setTimer((prev) => {
+          if (prev <= 1) {
+            finishTest();
+            return 0;
+          }
+          return prev - 1;
+        });
       }, 1000);
-    } else if (timer === 0) {
-      finishTest();
     }
     return () => clearInterval(timerRef.current);
   }, [isActive, timer]);
 
-  const startNewTest = () => {
-    const randomText = SAMPLE_TEXTS[Math.floor(Math.random() * SAMPLE_TEXTS.length)];
-    setText(randomText);
+  // Update Caret Position
+  useEffect(() => {
+    if (letterRefs.current[currIndex]) {
+      const letter = letterRefs.current[currIndex];
+      setCaretPosition({
+        top: letter.offsetTop,
+        left: letter.offsetLeft,
+      });
+    }
+  }, [currIndex, words, window.innerWidth]);
+
+  const generateWords = () => {
+    const shuffled = [...COMMON_WORDS].sort(() => 0.5 - Math.random());
+    return shuffled.slice(0, 50); // Get 50 random words
+  };
+
+  const resetTest = () => {
+    const newWords = generateWords();
+    setWords(newWords);
     setUserInput("");
+    setCurrIndex(0);
     setStartTime(null);
-    setEndTime(null);
+    setIsActive(false);
     setIsFinished(false);
     setWpm(0);
     setAccuracy(100);
-    setTimer(60);
-    setIsActive(false);
-    if (inputRef.current) inputRef.current.focus();
-  };
-
-  const handleInputChange = (e) => {
-    const value = e.target.value;
-    if (!isActive && value.length > 0 && !isFinished) {
-      setIsActive(true);
-      setStartTime(Date.now());
-    }
-
-    setUserInput(value);
-
-    // Calculate accuracy
-    let correctChars = 0;
-    for (let i = 0; i < value.length; i++) {
-      if (value[i] === text[i]) {
-        correctChars++;
-      }
-    }
-    setAccuracy(value.length > 0 ? Math.round((correctChars / value.length) * 100) : 100);
-
-    // Check if finished
-    if (value === text) {
-      finishTest();
+    setTimer(testDuration);
+    clearInterval(timerRef.current);
+    letterRefs.current = {}; // Reset refs
+    
+    // Focus input
+    if (inputRef.current) {
+      inputRef.current.value = "";
+      inputRef.current.focus();
     }
   };
 
@@ -79,90 +94,219 @@ function App() {
     setIsActive(false);
     setIsFinished(true);
     clearInterval(timerRef.current);
-    
-    const timeElapsed = (60 - timer) / 60; // in minutes
-    const wordsTyped = userInput.trim().split(/\s+/).length;
-    const finalWpm = timeElapsed > 0 ? Math.round(wordsTyped / timeElapsed) : 0;
-    setWpm(finalWpm);
+    calculateResults();
   };
 
-  const renderText = () => {
-    return text.split('').map((char, index) => {
-      let color = 'text-gray-400';
-      if (index < userInput.length) {
-        color = userInput[index] === char ? 'text-green-500' : 'text-red-500 bg-red-100';
-      }
-      return (
-        <span key={index} className={`${color} transition-colors duration-100`}>
-          {char}
-        </span>
-      );
-    });
+  const calculateResults = () => {
+    const correctChars = userInput.split('').filter((char, i) => char === flattenWords()[i]).length;
+    const totalChars = userInput.length;
+    const timeSpent = (testDuration - timer) / 60;
+    
+    // Standard WPM calculation: (All typed entries / 5) / Time (min)
+    // But usually we count only correct words or correct chars. 
+    // Monkeytype uses: (characters / 5) / time
+    const calculatedWpm = timeSpent > 0 ? Math.round((correctChars / 5) / timeSpent) : 0;
+    const calculatedAcc = totalChars > 0 ? Math.round((correctChars / totalChars) * 100) : 100;
+
+    setWpm(calculatedWpm);
+    setAccuracy(calculatedAcc);
+  };
+
+  const flattenWords = useMemo(() => {
+    return words.join(' ');
+  }, [words]);
+
+  const handleKeyDown = (e) => {
+    if (isFinished) {
+        if (e.key === 'Tab') {
+            e.preventDefault();
+            resetTest();
+        }
+        return;
+    }
+
+    if (e.key === 'Tab') {
+      e.preventDefault();
+      resetTest();
+      return;
+    }
+    
+    // Focus input if user starts typing but not focused
+    if (!isFocused && e.key.length === 1) {
+        inputRef.current.focus();
+    }
+  };
+
+  const handleInputChange = (e) => {
+    if (isFinished) return;
+
+    const val = e.target.value;
+    
+    if (!isActive && val.length === 1) {
+      setIsActive(true);
+      setStartTime(Date.now());
+    }
+
+    setUserInput(val);
+    setCurrIndex(val.length);
+
+    // Live Stats (Optional, maybe just calculate at end?)
+    // Let's do simple live calculation
+    const currentString = flattenWords();
+    let correct = 0;
+    for (let i = 0; i < val.length; i++) {
+        if (val[i] === currentString[i]) correct++;
+    }
+    const acc = val.length > 0 ? Math.round((correct / val.length) * 100) : 100;
+    setAccuracy(acc);
+    
+    if (startTime) {
+        const timeElapsed = (Date.now() - startTime) / 1000 / 60;
+        if (timeElapsed > 0) {
+            setWpm(Math.round((correct / 5) / timeElapsed));
+        }
+    }
+
+    // Auto finish if reached end
+    if (val.length >= currentString.length) {
+        finishTest();
+    }
+  };
+
+  const handleDurationChange = (duration) => {
+      setTestDuration(duration);
+      setTimer(duration);
+      resetTest();
   };
 
   return (
-    <div className="min-h-screen bg-slate-900 text-slate-100 flex flex-col items-center justify-center p-4 font-mono">
-      <div className="max-w-3xl w-full space-y-8">
-        <div className="text-center space-y-2">
-          <h1 className="text-4xl font-bold text-yellow-400">Typing Speed Test</h1>
-          <p className="text-slate-400">Test your typing skills and improve your speed.</p>
+    <div 
+      className="min-h-screen flex flex-col items-center justify-center p-8 transition-colors duration-300 relative"
+      onKeyDown={handleKeyDown}
+      tabIndex={0} // Make div focusable for global keys
+    >
+        {/* Header / Nav */}
+        <div className="absolute top-10 left-0 right-0 flex justify-center space-x-8 text-lg text-[var(--color-main-text)] select-none">
+            <div className="flex space-x-4 bg-[var(--color-main-bg)] px-4 py-2 rounded-lg">
+                <button 
+                    onClick={() => handleDurationChange(15)} 
+                    className={`hover:text-[var(--color-active-text)] transition-colors ${testDuration === 15 ? 'text-[var(--color-caret)]' : ''}`}
+                >15s</button>
+                <button 
+                    onClick={() => handleDurationChange(30)} 
+                    className={`hover:text-[var(--color-active-text)] transition-colors ${testDuration === 30 ? 'text-[var(--color-caret)]' : ''}`}
+                >30s</button>
+                <button 
+                    onClick={() => handleDurationChange(60)} 
+                    className={`hover:text-[var(--color-active-text)] transition-colors ${testDuration === 60 ? 'text-[var(--color-caret)]' : ''}`}
+                >60s</button>
+            </div>
         </div>
 
-        <div className="flex justify-between items-center bg-slate-800 p-6 rounded-xl border border-slate-700 shadow-xl">
-          <div className="text-center">
-            <div className="text-sm uppercase tracking-widest text-slate-500">WPM</div>
-            <div className="text-3xl font-bold text-yellow-400">{isActive ? '...' : wpm}</div>
-          </div>
-          <div className="text-center">
-            <div className="text-sm uppercase tracking-widest text-slate-500">Accuracy</div>
-            <div className="text-3xl font-bold text-yellow-400">{accuracy}%</div>
-          </div>
-          <div className="text-center">
-            <div className="text-sm uppercase tracking-widest text-slate-500">Time Left</div>
-            <div className="text-3xl font-bold text-yellow-400">{timer}s</div>
-          </div>
-        </div>
-
-        <div className="relative bg-slate-800 p-8 rounded-xl border border-slate-700 shadow-2xl min-h-[200px] leading-relaxed text-xl select-none">
-          {renderText()}
-          <textarea
-            ref={inputRef}
-            value={userInput}
-            onChange={handleInputChange}
-            disabled={isFinished}
-            className="absolute inset-0 w-full h-full opacity-0 cursor-default resize-none"
-            autoFocus
-          />
-        </div>
-
-        {isFinished && (
-          <div className="bg-yellow-400 text-slate-900 p-6 rounded-xl text-center space-y-4 animate-bounce">
-            <h2 className="text-2xl font-bold">Test Complete!</h2>
-            <p className="text-lg">You typed at <strong>{wpm} WPM</strong> with <strong>{accuracy}%</strong> accuracy.</p>
-            <button
-              onClick={startNewTest}
-              className="bg-slate-900 text-white px-8 py-2 rounded-full font-bold hover:bg-slate-800 transition-colors"
-            >
-              Try Again
-            </button>
-          </div>
+        {/* Focus Warning Overlay */}
+        {!isFocused && !isFinished && (
+            <div className="absolute inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm cursor-pointer" onClick={() => inputRef.current.focus()}>
+                <div className="text-[var(--color-active-text)] text-xl">Click to focus</div>
+            </div>
         )}
 
-        {!isFinished && (
-          <div className="text-center">
-            <button
-              onClick={startNewTest}
-              className="text-slate-500 hover:text-yellow-400 transition-colors underline underline-offset-4"
-            >
-              Restart Test
-            </button>
-          </div>
-        )}
+        <div className="max-w-4xl w-full flex flex-col items-center space-y-12">
+            
+            {/* Stats Header (Live) */}
+            <div className={`flex justify-between w-full max-w-2xl text-2xl text-[var(--color-caret)] font-bold transition-opacity duration-300 ${isActive ? 'opacity-100' : 'opacity-0'}`}>
+                <div>{timer}s</div>
+                <div>{wpm} WPM</div>
+            </div>
 
-        <footer className="text-center text-slate-600 text-sm pt-8">
-          Built by <a href="https://github.com/ramkrishna-js" className="hover:text-yellow-400">ramkrishna-js</a>
-        </footer>
-      </div>
+            {/* Typing Area */}
+            {!isFinished ? (
+                <div 
+                    className="relative w-full max-w-4xl text-3xl leading-relaxed break-all select-none outline-none"
+                    onClick={() => inputRef.current.focus()}
+                    ref={containerRef}
+                >
+                    {/* Input Field (Hidden) */}
+                    <input
+                        ref={inputRef}
+                        type="text"
+                        className="absolute opacity-0 -z-10"
+                        value={userInput}
+                        onChange={handleInputChange}
+                        onBlur={() => setIsFocused(false)}
+                        onFocus={() => setIsFocused(true)}
+                        autoComplete="off"
+                        autoCorrect="off"
+                        autoCapitalize="off"
+                        spellCheck="false"
+                    />
+
+                    {/* Rendered Text */}
+                    <div className="flex flex-wrap relative">
+                        {/* Caret */}
+                        {isFocused && (
+                            <div 
+                                className="absolute w-0.5 h-8 bg-[var(--color-caret)] blink caret transition-all duration-100 ease-out"
+                                style={{ 
+                                    top: caretPosition.top + 4, // subtle adjustment
+                                    left: caretPosition.left 
+                                }}
+                            ></div>
+                        )}
+
+                        {flattenWords().split('').map((char, index) => {
+                            let statusClass = "text-[var(--color-main-text)]"; // default
+                            
+                            if (index < userInput.length) {
+                                if (userInput[index] === char) {
+                                    statusClass = "text-[var(--color-active-text)]";
+                                } else {
+                                    statusClass = "text-[var(--color-error)]";
+                                }
+                            }
+                            
+                            return (
+                                <span 
+                                    key={index} 
+                                    ref={el => letterRefs.current[index] = el}
+                                    className={`${statusClass} transition-colors duration-75`}
+                                >
+                                    {char}
+                                </span>
+                            );
+                        })}
+                    </div>
+                </div>
+            ) : (
+                /* Results View */
+                <div className="flex flex-col items-center space-y-6 animate-in fade-in zoom-in duration-300">
+                     <div className="grid grid-cols-2 gap-12 text-center">
+                        <div>
+                            <div className="text-[var(--color-main-text)] text-2xl mb-1">wpm</div>
+                            <div className="text-[var(--color-caret)] text-7xl font-bold">{wpm}</div>
+                        </div>
+                        <div>
+                            <div className="text-[var(--color-main-text)] text-2xl mb-1">acc</div>
+                            <div className="text-[var(--color-caret)] text-7xl font-bold">{accuracy}%</div>
+                        </div>
+                    </div>
+                    <div className="flex space-x-4 pt-8">
+                         <button 
+                            onClick={resetTest}
+                            className="px-8 py-3 bg-[var(--color-main-text)] text-[var(--color-main-bg)] rounded text-xl hover:bg-[var(--color-active-text)] transition-colors focus:outline-none focus:ring-2 ring-[var(--color-caret)]"
+                            autoFocus
+                        >
+                            Restart (Tab)
+                        </button>
+                    </div>
+                </div>
+            )}
+            
+            {/* Footer / Instructions */}
+             <div className="fixed bottom-8 text-[var(--color-main-text)] text-sm opacity-50 flex gap-8">
+                <span><kbd className="bg-gray-700 px-2 py-1 rounded text-xs">Tab</kbd> to restart</span>
+                <span>Built by <a href="https://github.com/ramkrishna-js" className="hover:text-[var(--color-active-text)] underline">ramkrishna-js</a></span>
+            </div>
+        </div>
     </div>
   );
 }

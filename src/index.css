@@ -1,1 +1,41 @@
 @import "tailwindcss";
+
+@theme {
+  --font-mono: 'Roboto Mono', monospace;
+  --color-main-bg: #323437;
+  --color-main-text: #646669;
+  --color-active-text: #d1d0c5;
+  --color-error: #ca4754;
+  --color-caret: #e2b714;
+}
+
+body {
+  background-color: var(--color-main-bg);
+  font-family: var(--font-mono);
+  color: var(--color-main-text);
+  margin: 0;
+  overflow: hidden; /* Prevent scrolling during test */
+}
+
+/* Smooth Caret Animation */
+.caret {
+  transition: left 0.1s ease-out, top 0.1s ease-out;
+}
+
+.blink {
+  animation: blink 1s infinite;
+}
+
+@keyframes blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0; }
+}
+
+/* Hide Scrollbar but allow scroll */
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
