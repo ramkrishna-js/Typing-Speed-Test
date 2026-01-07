@@ -4,7 +4,7 @@ import './index.css'
 import App from './App.jsx'
 import ErrorBoundary from './ErrorBoundary.jsx'
 
-console.log('Typing Speed Test v1.1.0 loaded');
+console.log('Typing Speed Test v1.1.1 loaded');
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
