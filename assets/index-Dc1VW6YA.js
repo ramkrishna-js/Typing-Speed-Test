@@ -7322,7 +7322,7 @@ const TypingTest = ({ onExit }) => {
     calculateResults();
   };
   const calculateResults = () => {
-    const correctChars = userInput.split("").filter((char, i) => char === flattenWords()[i]).length;
+    const correctChars = userInput.split("").filter((char, i) => char === flattenWords[i]).length;
     const totalChars = userInput.length;
     const timeSpent = (testDuration - timer) / 60;
     const calculatedWpm = timeSpent > 0 ? Math.round(correctChars / 5 / timeSpent) : 0;
@@ -7363,7 +7363,7 @@ const TypingTest = ({ onExit }) => {
     }
     setUserInput(val);
     setCurrIndex(val.length);
-    const currentString = flattenWords();
+    const currentString = flattenWords;
     let correct = 0;
     for (let i = 0; i < val.length; i++) {
       if (val[i] === currentString[i]) correct++;
@@ -7442,7 +7442,7 @@ const TypingTest = ({ onExit }) => {
                       style: { top: caretPosition.top + 4, left: caretPosition.left }
                     }
                   ),
-                  flattenWords().split("").map((char, index) => {
+                  flattenWords.split("").map((char, index) => {
                     let statusClass = "text-[var(--color-main-text)]";
                     if (index < userInput.length) {
                       statusClass = userInput[index] === char ? "text-[var(--color-active-text)]" : "text-[var(--color-error)]";
@@ -7630,4 +7630,4 @@ console.log("Typing Speed Test v1.3.0 (Vite 5 Stable) loaded");
 createRoot(document.getElementById("root")).render(
   /* @__PURE__ */ jsxRuntimeExports.jsx(ErrorBoundary, { children: /* @__PURE__ */ jsxRuntimeExports.jsx(App, {}) })
 );
-//# sourceMappingURL=index-DNv1BTWy.js.map
+//# sourceMappingURL=index-Dc1VW6YA.js.map
