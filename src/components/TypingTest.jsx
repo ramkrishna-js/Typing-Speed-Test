@@ -172,6 +172,8 @@ const TypingTest = ({ onExit }) => {
       resetTest();
   };
 
+  if (words.length === 0) return <div className="w-full h-full flex items-center justify-center text-[var(--color-main-text)]">Loading...</div>;
+
   return (
     <div 
       className="w-full h-full flex flex-col items-center justify-center p-8 relative outline-none"

@@ -18,7 +18,7 @@ function App() {
   }, [view]);
 
   return (
-    <div className="min-h-screen bg-[var(--color-main-bg)] text-[var(--color-main-text)] font-mono overflow-y-auto no-scrollbar">
+    <div className="h-screen w-full bg-[var(--color-main-bg)] text-[var(--color-main-text)] font-mono flex flex-col overflow-hidden">
       {view === 'home' && <Home onStart={() => setView('test')} onCredits={() => setView('credits')} />}
       {view === 'test' && <TypingTest onExit={() => setView('home')} />}
       {view === 'credits' && <Credits onBack={() => setView('home')} />}
