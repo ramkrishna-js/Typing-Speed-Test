@@ -1,10 +1,12 @@
 import { useState, useEffect, useRef, useMemo } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 const COMMON_WORDS = [
   "the", "be", "of", "and", "a", "to", "in", "he", "have", "it", "that", "for", "they", "i", "with", "as", "not", "on", "she", "at", "by", "this", "we", "you", "do", "but", "from", "or", "which", "one", "would", "all", "will", "there", "say", "who", "make", "when", "can", "more", "if", "no", "man", "out", "other", "so", "what", "time", "up", "go", "about", "than", "into", "could", "state", "only", "new", "year", "some", "take", "come", "these", "know", "see", "use", "get", "like", "then", "first", "any", "work", "now", "may", "such", "give", "over", "think", "most", "even", "find", "day", "also", "after", "way", "many", "must", "look", "before", "great", "back", "through", "long", "where", "much", "should", "well", "people", "down", "own", "just", "because", "good", "each", "those", "feel", "seem", "how", "high", "too", "place", "little", "world", "very", "still", "nation", "hand", "old", "life", "tell", "write", "become", "here", "show", "house", "both", "between", "need", "mean", "call", "develop", "under", "last", "right", "move", "thing", "general", "school", "never", "same", "another", "begin", "while", "number", "part", "turn", "real", "leave", "might", "want", "point", "form", "off", "child", "few", "small", "since", "against", "ask", "late", "home", "interest", "large", "person", "end", "open", "public", "follow", "during", "present", "without", "again", "hold", "govern", "around", "possible", "head", "consider", "word", "program", "problem", "however", "lead", "system", "set", "order", "eye", "plan", "run", "keep", "face", "fact", "group", "play", "stand", "increase", "early", "course", "change", "help", "line"
 ];
 
-const TypingTest = ({ onExit }) => {
+const TypingTest = () => {
+  const navigate = useNavigate();
   const [words, setWords] = useState([]);
   const [userInput, setUserInput] = useState("");
   const [currIndex, setCurrIndex] = useState(0); 
@@ -109,8 +111,8 @@ const TypingTest = ({ onExit }) => {
   }, [words]);
 
   const handleKeyDown = (e) => {
-    if (e.key === 'Escape' && onExit) {
-        onExit();
+    if (e.key === 'Escape') {
+        navigate('/');
         return;
     }
 
@@ -181,7 +183,7 @@ const TypingTest = ({ onExit }) => {
       tabIndex={0}
       autoFocus
     >
-        <div className="absolute top-10 left-0 right-0 flex justify-center space-x-8 text-lg text-[var(--color-main-text)] select-none">
+        <div className="absolute top-10 left-0 right-0 flex justify-center space-x-8 text-lg text-[var(--color-main-text)] select-none z-20">
             <div className="flex space-x-4 bg-[var(--color-main-bg)] px-4 py-2 rounded-lg">
                 <button onClick={() => handleDurationChange(15)} className={`hover:text-[var(--color-active-text)] transition-colors ${testDuration === 15 ? 'text-[var(--color-caret)]' : ''}`}>15s</button>
                 <button onClick={() => handleDurationChange(30)} className={`hover:text-[var(--color-active-text)] transition-colors ${testDuration === 30 ? 'text-[var(--color-caret)]' : ''}`}>30s</button>
@@ -269,7 +271,7 @@ const TypingTest = ({ onExit }) => {
             
              <div className="fixed bottom-8 text-[var(--color-main-text)] text-sm opacity-50 flex gap-8">
                 <span><kbd className="bg-gray-700 px-2 py-1 rounded text-xs">Tab</kbd> to restart</span>
-                <span><kbd className="bg-gray-700 px-2 py-1 rounded text-xs">Esc</kbd> to exit</span>
+                <span><kbd className="bg-gray-700 px-2 py-1 rounded text-xs">Esc</kbd> to home</span>
             </div>
         </div>
     </div>

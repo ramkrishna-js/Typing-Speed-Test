@@ -1,11 +1,12 @@
 import { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 
-const Credits = ({ onBack }) => {
+const Credits = () => {
+  const navigate = useNavigate();
   const [contributors, setContributors] = useState([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    // We use the direct API URL. Casing should not matter but we use the exact one.
     fetch('https://api.github.com/repos/ramkrishna-js/Typing-Speed-Test/contributors')
       .then(res => {
         if (!res.ok) throw new Error('Failed to fetch');
@@ -25,8 +26,8 @@ const Credits = ({ onBack }) => {
 
   return (
     <div 
-      className="flex flex-col items-center justify-center min-h-screen p-6 sm:p-12 space-y-10 outline-none"
-      onKeyDown={(e) => e.key === 'Escape' && onBack()}
+      className="flex flex-col items-center justify-center min-h-screen p-6 sm:p-12 space-y-10 outline-none overflow-y-auto no-scrollbar"
+      onKeyDown={(e) => e.key === 'Escape' && navigate('/')}
       tabIndex={0}
       autoFocus
     >
@@ -54,9 +55,7 @@ const Credits = ({ onBack }) => {
 
             {/* Co-Author / Collaborator */}
             <div className="flex items-center space-x-4 p-4 rounded-xl bg-white/5">
-              <div className="w-16 h-16 rounded-full bg-gradient-to-br from-yellow-400 to-red-500 flex items-center justify-center text-white text-2xl font-bold border-2 border-[var(--color-caret)]">
-                M
-              </div>
+              <img src="https://github.com/manjunathh-xyz.png" alt="manjunathh-xyz" className="w-16 h-16 rounded-full border-2 border-[var(--color-caret)]" />
               <div>
                 <div className="text-[var(--color-active-text)] font-bold text-xl">manjunathh-xyz</div>
                 <div className="text-[var(--color-main-text)] text-sm italic">Co-Author</div>
@@ -78,7 +77,7 @@ const Credits = ({ onBack }) => {
           ) : (
             <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
               {contributors
-                .filter(c => c.login !== 'ramkrishna-js')
+                .filter(c => c.login !== 'ramkrishna-js' && c.login !== 'manjunathh-xyz')
                 .map(contributor => (
                   <a 
                     key={contributor.id} 
@@ -93,7 +92,7 @@ const Credits = ({ onBack }) => {
                     </span>
                   </a>
                 ))}
-              {contributors.filter(c => c.login !== 'ramkrishna-js').length === 0 && (
+              {contributors.filter(c => c.login !== 'ramkrishna-js' && c.login !== 'manjunathh-xyz').length === 0 && (
                 <div className="col-span-full text-center py-4 text-[var(--color-main-text)] italic text-sm">
                   Waiting for more amazing people to contribute...
                 </div>
@@ -104,7 +103,7 @@ const Credits = ({ onBack }) => {
       </div>
 
       <button
-        onClick={onBack}
+        onClick={() => navigate('/')}
         className="px-8 py-3 text-[var(--color-main-text)] hover:text-[var(--color-active-text)] text-lg transition-colors flex items-center space-x-2"
       >
         <span>← Back to Home</span>

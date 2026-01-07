@@ -1,6 +1,22 @@
-const Home = ({ onStart, onCredits }) => {
+import { useNavigate } from 'react-router-dom';
+import { useEffect } from 'react';
+
+const Home = () => {
+  const navigate = useNavigate();
+
+  // Handle global Enter key to start test
+  useEffect(() => {
+    const handleKeyDown = (e) => {
+      if (e.key === 'Enter') {
+        navigate('/test');
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [navigate]);
+
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen text-center p-6 space-y-10">
+    <div className="flex flex-col items-center justify-center min-h-screen text-center p-6 space-y-10 relative">
       <div className="space-y-4">
         <h1 className="text-5xl md:text-7xl font-bold text-[var(--color-active-text)] tracking-tighter">
           Typing Speed Test
@@ -12,14 +28,14 @@ const Home = ({ onStart, onCredits }) => {
 
       <div className="flex flex-col sm:flex-row gap-6 items-center relative z-10">
         <button
-          onClick={onStart}
+          onClick={() => navigate('/test')}
           className="px-10 py-5 bg-[var(--color-caret)] text-[var(--color-main-bg)] text-2xl font-black rounded-xl hover:scale-105 active:scale-95 transition-all duration-200 cursor-pointer shadow-lg"
         >
           START TYPING
         </button>
 
         <button
-          onClick={onCredits}
+          onClick={() => navigate('/credits')}
           className="px-10 py-5 bg-transparent border-2 border-[var(--color-main-text)] text-[var(--color-main-text)] text-2xl font-bold rounded-xl hover:border-[var(--color-active-text)] hover:text-[var(--color-active-text)] transition-all duration-200 cursor-pointer"
         >
           CREDITS
@@ -32,6 +48,12 @@ const Home = ({ onStart, onCredits }) => {
           <span className="text-sm">to start</span>
         </div>
       </div>
+
+      <footer className="absolute bottom-4 w-full text-center text-xs text-[var(--color-main-text)] opacity-30">
+        <a href="https://github.com/ramkrishna-js/Typing-Speed-Test" target="_blank" rel="noreferrer" className="hover:text-[var(--color-active-text)] transition-colors">
+          View Source on GitHub
+        </a>
+      </footer>
     </div>
   );
 };

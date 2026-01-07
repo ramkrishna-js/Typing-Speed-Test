@@ -4,8 +4,7 @@ A modern, minimalist typing speed test application built with **React** and **Ta
 
 🔗 **[Live Demo](https://ramkrishna-js.github.io/Typing-Speed-Test/)**
 
-![Typing Speed Test Preview](https://via.placeholder.com/800x450/1e293b/fbbf24?text=Typing+Speed+Test+Preview)
-*(Note: Replace this placeholder with a real screenshot of your app!)*
+![Typing Speed Test Preview](public/preview.png)
 
 ## ✨ Features
 
