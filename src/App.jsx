@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef, useMemo } from 'react';
+import { useState, useEffect, useRef, useMemo, useLayoutEffect } from 'react';
 
 // ==========================================
 // DATA & CONSTANTS
@@ -114,13 +114,24 @@ const TypingTest = ({ onExit }) => {
     return () => clearInterval(timerRef.current);
   }, [isActive, timer]);
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     if (letterRefs.current[currIndex]) {
       const letter = letterRefs.current[currIndex];
       setCaretPosition({
         top: letter.offsetTop,
         left: letter.offsetLeft,
       });
+      
+      // Auto-scroll logic: if caret is near bottom of view, scroll container
+      if (containerRef.current) {
+         const container = containerRef.current;
+         const caretBottom = letter.offsetTop + letter.offsetHeight;
+         const containerBottom = container.scrollTop + container.clientHeight;
+         
+         if (caretBottom > containerBottom - 50) {
+             container.scrollTop = letter.offsetTop - 50;
+         }
+      }
     }
   }, [currIndex, words]);
 
@@ -238,10 +249,15 @@ const TypingTest = ({ onExit }) => {
 
   if (words.length === 0) return <div className="w-full h-full flex items-center justify-center text-[var(--color-main-text)]">Loading...</div>;
 
-  return (
-    <div 
-      className="w-full h-full flex flex-col items-center justify-center p-8 relative outline-none"
-      onKeyDown={handleKeyDown}
+        const charList = useMemo(() => flattenWords.split(''), [flattenWords]);
+
+      
+
+        return (
+
+          <div 
+
+            className="w-full h-full flex flex-col items-center justify-center p-8 relative outline-none"      onKeyDown={handleKeyDown}
       tabIndex={0}
       autoFocus
     >
@@ -294,7 +310,7 @@ const TypingTest = ({ onExit }) => {
                             ></div>
                         )}
 
-                        {flattenWords.split('').map((char, index) => {
+                        {charList.map((char, index) => {
                             let statusClass = "text-[var(--color-main-text)]";
                             if (index < userInput.length) {
                                 statusClass = userInput[index] === char ? "text-[var(--color-active-text)]" : "text-[var(--color-error)]";
