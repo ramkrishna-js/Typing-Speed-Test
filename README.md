@@ -83,7 +83,7 @@ This project is licensed under the [MIT License](LICENSE).
 
 
 
-- **Main Developer**: [ramkrishna-js](https://github.com/ramkrishna-js)
+- **Lead Developer**: [ramkrishna-js](https://github.com/ramkrishna-js)
 
 
 
